@@ -2,6 +2,7 @@
 using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using DeveloperUniversity.Migrations;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 
@@ -24,10 +25,11 @@ namespace DeveloperUniversity.Models
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {
-            //This will create database if one doesn't exist.
-            Database.SetInitializer(new CreateDatabaseIfNotExists<ApplicationDbContext>());
-            //This will drop and re-create the database if model changes.
-            Database.SetInitializer(new DropCreateDatabaseIfModelChanges<ApplicationDbContext>());
+            Database.SetInitializer<ApplicationDbContext>(new MigrateDatabaseToLatestVersion<ApplicationDbContext, Configuration>());
+            ////This will create database if one doesn't exist.
+            //Database.SetInitializer(new CreateDatabaseIfNotExists<ApplicationDbContext>());
+            ////This will drop and re-create the database if model changes.
+            //Database.SetInitializer(new DropCreateDatabaseIfModelChanges<ApplicationDbContext>());
         }
 
         //Note: Adding ApplicationDbContext inside the ASP .NET Idenity Context
