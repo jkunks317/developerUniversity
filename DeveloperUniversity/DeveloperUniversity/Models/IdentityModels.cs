@@ -25,7 +25,6 @@ namespace DeveloperUniversity.Models
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {
-            Database.SetInitializer<ApplicationDbContext>(new MigrateDatabaseToLatestVersion<ApplicationDbContext, Configuration>());
             ////This will create database if one doesn't exist.
             //Database.SetInitializer(new CreateDatabaseIfNotExists<ApplicationDbContext>());
             ////This will drop and re-create the database if model changes.
