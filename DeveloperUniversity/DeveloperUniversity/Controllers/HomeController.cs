@@ -1,4 +1,6 @@
-﻿using System.Net.Mail;
+﻿using System;
+using System.Net;
+using System.Net.Mail;
 using System.Web.Mvc;
 using DeveloperUniversity.Models.ViewModels;
 using reCAPTCHA.MVC;
@@ -23,6 +25,12 @@ namespace DeveloperUniversity.Controllers
         {
             return View();
         }
+
+        public ActionResult EmailError()
+        {
+            return View();
+        }
+    
 
         [HttpPost]
         [CaptchaValidator(
@@ -49,28 +57,40 @@ namespace DeveloperUniversity.Controllers
             //http://www.c-sharpcorner.com/uploadfile/sourabh_mishra1/sending-an-e-mail-using-asp-net-mvc/
             if (ModelState.IsValid)
             {
+                var toEmail = "adelantehispanic@gmail.com";
+                var toEmailPassword = "Adelante";
+                string Body = viewModel.Messge;
+
                 MailMessage mail = new MailMessage();
-                mail.To.Add("gmailAddress");
+                mail.To.Add(toEmail);
                 mail.From = new MailAddress(viewModel.Email);
                 mail.Subject = "Contact Form Submission";
-                string Body = viewModel.Messge;
                 mail.Body = Body;
                 mail.IsBodyHtml = true;
                 SmtpClient smtp = new SmtpClient();
-                smtp.Host = "smtp.gmail.com";
-                smtp.Port = 587;
-                smtp.UseDefaultCredentials = false;
-                smtp.Credentials = new System.Net.NetworkCredential
-                ("gmailAddress", "gmailPassword");
-                smtp.EnableSsl = true;
+
+                //SMTP settings when running locally (uses gmail)
+                //smtp.Host = "smtp.gmail.com";
+                //smtp.Port = 587;
+                //smtp.EnableSsl = true;
+                //Setup credentials to login to our sender email address ("UserName", "Password")
+                //NetworkCredential credentials = new NetworkCredential(toEmail, toEmailPassword);
+                //smtp.UseDefaultCredentials = false;
+                //smtp.Credentials = credentials;
+
+                //Production settings        
+                smtp.EnableSsl = false;
+                smtp.Host = "relay-hosting.secureserver.net";
+                smtp.Port = 25;
+
                 smtp.Send(mail);
-                return View("Index");
+
+            return View("Index");
             }
             else
             {
                 return View();
             }
-
         }
     }
 }
