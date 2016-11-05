@@ -19,9 +19,11 @@
         <div class="form-group">
             @Html.TextAreaFor(m => m.Messge, new { @placeholder = "Message" })
         </div>
-
-        @Html.Recaptcha()
-        @Html.ValidationMessage("ReCaptcha")
+        @if (!HttpContext.Current.IsDebuggingEnabled)
+        {
+            @Html.Recaptcha()
+            @Html.ValidationMessage("ReCaptcha")
+        }
 
         <div class="button-wrapper">
             <input type="submit" value="Send" name="submit" class="btn btn-success">

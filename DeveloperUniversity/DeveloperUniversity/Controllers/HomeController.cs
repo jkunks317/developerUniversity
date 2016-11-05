@@ -30,24 +30,20 @@ namespace DeveloperUniversity.Controllers
         {
             return View();
         }
-    
+
 
         [HttpPost]
         [CaptchaValidator(
-        PrivateKey = "6LehwAgUAAAAACXHKuFtJmdZWWPvf7--XsaZiRsw",
-        ErrorMessage = "Invalid input captcha.",
-        RequiredMessage = "The captcha field is required.")]
+            PrivateKey = "6LehwAgUAAAAACXHKuFtJmdZWWPvf7--XsaZiRsw",
+            ErrorMessage = "Invalid input captcha.",
+            RequiredMessage = "The captcha field is required.")]
         public ActionResult Contact(MailViewModel viewModel)
         {
             //For help on setting up the captcha visit the link below and refer to the "Quick Start" guide.
             //http://recaptchamvc.apphb.com/
 
-
             //To get your site and private keys for the captcha, visit the link below.
             // https://www.google.com/recaptcha/intro/index.html
-
-
-            //Below is how to set up a contact form for GMAIL ONLY!.
 
             //If you receive an error on Line smtp.Send(mail) then you might need to log into that Gmail 
             //account you are trying to send the emails from and find the option to "Enable Less Secure Apps"
@@ -55,7 +51,9 @@ namespace DeveloperUniversity.Controllers
 
             //See the referenced code for explanation of this example.
             //http://www.c-sharpcorner.com/uploadfile/sourabh_mishra1/sending-an-e-mail-using-asp-net-mvc/
-            if (ModelState.IsValid)
+
+            if ((ModelState.IsValid || HttpContext.IsDebuggingEnabled == false) || 
+                (ModelState.IsValid == false && HttpContext.IsDebuggingEnabled))
             {
                 var toEmail = "adelantehispanic@gmail.com";
                 var toEmailPassword = "Adelante";
@@ -69,19 +67,25 @@ namespace DeveloperUniversity.Controllers
                 mail.IsBodyHtml = true;
                 SmtpClient smtp = new SmtpClient();
 
-                //SMTP settings when running locally (uses gmail)
-                //smtp.Host = "smtp.gmail.com";
-                //smtp.Port = 587;
-                //smtp.EnableSsl = true;
-                //Setup credentials to login to our sender email address ("UserName", "Password")
-                //NetworkCredential credentials = new NetworkCredential(toEmail, toEmailPassword);
-                //smtp.UseDefaultCredentials = false;
-                //smtp.Credentials = credentials;
-
-                //Production settings        
-                smtp.EnableSsl = false;
-                smtp.Host = "relay-hosting.secureserver.net";
-                smtp.Port = 25;
+                if (HttpContext.IsDebuggingEnabled)
+                {
+                    //SMTP settings when running locally (uses gmail)
+                    smtp.Host = "smtp.gmail.com";
+                    smtp.Port = 587;
+                    smtp.EnableSsl = true;
+                    //Setup credentials to login to our sender email address("UserName", "Password")
+                    NetworkCredential credentials = new NetworkCredential(toEmail, toEmailPassword);
+                    smtp.UseDefaultCredentials = false;
+                    smtp.Credentials = credentials;
+                }
+                else
+                {
+                    //Production settings        
+                    smtp.EnableSsl = false;
+                    smtp.Host = "relay-hosting.secureserver.net";
+                    smtp.Port = 25;
+                }
+                
 
                 smtp.Send(mail);
 
