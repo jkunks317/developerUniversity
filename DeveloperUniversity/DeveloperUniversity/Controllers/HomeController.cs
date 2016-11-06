@@ -52,11 +52,34 @@ namespace DeveloperUniversity.Controllers
             //See the referenced code for explanation of this example.
             //http://www.c-sharpcorner.com/uploadfile/sourabh_mishra1/sending-an-e-mail-using-asp-net-mvc/
 
-            if ((ModelState.IsValid || HttpContext.IsDebuggingEnabled == false) || 
-                (ModelState.IsValid == false && HttpContext.IsDebuggingEnabled))
+            var IsDebug = false;
+
+            #if DEBUG
+                IsDebug = true;
+            #endif
+
+            var toEmail = "adelantehispanic@gmail.com";
+            var toEmailPassword = "Adelante";
+
+            //Debug SMTP Settings
+            var debugSmtpClient = new SmtpClient();
+            debugSmtpClient.Host = "smtp.gmail.com";
+            debugSmtpClient.Port = 587;
+            debugSmtpClient.EnableSsl = true;
+            //Setup credentials to login to our sender email address("UserName", "Password")
+            NetworkCredential credentials = new NetworkCredential(toEmail, toEmailPassword);
+            debugSmtpClient.UseDefaultCredentials = false;
+            debugSmtpClient.Credentials = credentials;
+
+            //Release SMTP Settings
+            var releaseSmtpClient = new SmtpClient();
+            releaseSmtpClient.EnableSsl = false;
+            releaseSmtpClient.Host = "relay-hosting.secureserver.net";
+            releaseSmtpClient.Port = 25;
+
+
+            if (ModelState.IsValid || (ModelState.IsValid == false && IsDebug))            
             {
-                var toEmail = "adelantehispanic@gmail.com";
-                var toEmailPassword = "Adelante";
                 string Body = viewModel.Messge;
 
                 MailMessage mail = new MailMessage();
@@ -66,29 +89,19 @@ namespace DeveloperUniversity.Controllers
                 mail.Body = Body;
                 mail.IsBodyHtml = true;
                 SmtpClient smtp = new SmtpClient();
-
-                if (HttpContext.IsDebuggingEnabled)
+#if DEBUG
+                smtp = debugSmtpClient;
+#else
+                smtp = releaseSmtpClient;
+#endif
+                try
                 {
-                    //SMTP settings when running locally (uses gmail)
-                    smtp.Host = "smtp.gmail.com";
-                    smtp.Port = 587;
-                    smtp.EnableSsl = true;
-                    //Setup credentials to login to our sender email address("UserName", "Password")
-                    NetworkCredential credentials = new NetworkCredential(toEmail, toEmailPassword);
-                    smtp.UseDefaultCredentials = false;
-                    smtp.Credentials = credentials;
+                    smtp.Send(mail);
                 }
-                else
+                catch (SmtpException)
                 {
-                    //Production settings        
-                    smtp.EnableSsl = false;
-                    smtp.Host = "relay-hosting.secureserver.net";
-                    smtp.Port = 25;
+                    return View("EmailError");
                 }
-                
-
-                smtp.Send(mail);
-
             return View("Index");
             }
             else
