@@ -1,5 +1,4 @@
-﻿using System.Data.Entity;
-using System.Linq;
+﻿using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 using DeveloperUniversity.Models;
@@ -7,6 +6,7 @@ using DeveloperUniversity.Models.ViewModels;
 
 namespace DeveloperUniversity.Controllers
 {
+    [Authorize(Roles = "Admin, Volunteer")]
     public class AbsenceController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
