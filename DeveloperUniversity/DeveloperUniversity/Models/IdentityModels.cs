@@ -1,5 +1,6 @@
 ﻿using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
+using System.Diagnostics;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using DeveloperUniversity.Migrations;
@@ -25,10 +26,14 @@ namespace DeveloperUniversity.Models
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {
+#if DEBUG
             ////This will create database if one doesn't exist.
-            //Database.SetInitializer(new CreateDatabaseIfNotExists<ApplicationDbContext>());
+            Database.SetInitializer(new CreateDatabaseIfNotExists<ApplicationDbContext>());
             ////This will drop and re-create the database if model changes.
-            //Database.SetInitializer(new DropCreateDatabaseIfModelChanges<ApplicationDbContext>());
+            Database.SetInitializer(new DropCreateDatabaseIfModelChanges<ApplicationDbContext>());
+#endif
+
+
         }
 
         //Note: Adding ApplicationDbContext inside the ASP .NET Idenity Context
@@ -54,5 +59,6 @@ namespace DeveloperUniversity.Models
         public DbSet<Enrollment> Enrollments { get; set; }
         public DbSet<Course> Courses { get; set; }
         public DbSet<Event> Events { get; set; }
+        public DbSet<Absence> Absences { get; set; }
     }
 }
