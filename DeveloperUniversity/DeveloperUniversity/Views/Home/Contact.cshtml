@@ -11,13 +11,13 @@
     @Html.ValidationSummary()
     <fieldset>
         <div class="form-group">
-            @Html.TextBoxFor(m => m.Name, new { @placeholder = "Name", @type = "text" })
+            @Html.TextBoxFor(m => m.Name, new { @placeholder = "Name", @type = "text", @class = "form-control" })
         </div>
         <div class="form-group">
-            @Html.TextBoxFor(m => m.Email, new { @placeholder = "Email Address", @type = "email" })
+            @Html.TextBoxFor(m => m.Email, new { @placeholder = "Email Address", @type = "email", @class = "form-control" })
         </div>
         <div class="form-group">
-            @Html.TextAreaFor(m => m.Messge, new {@placeholder = "Message"})
+            @Html.TextAreaFor(m => m.Messge, new {@placeholder = "Message", @class = "form-control" })
         </div>
             @Html.Recaptcha()
             @Html.ValidationMessage("ReCaptcha")

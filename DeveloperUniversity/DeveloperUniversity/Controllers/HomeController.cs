@@ -58,8 +58,8 @@ namespace DeveloperUniversity.Controllers
                 IsDebug = true;
             #endif
 
-            var toEmail = "adelantehispanic@gmail.com";
-            var toEmailPassword = "Adelante";
+            var toEmail = "tylersmtptest@gmail.com";
+            var toEmailPassword = "smtpwelcome1";
 
             //Debug SMTP Settings
             var debugSmtpClient = new SmtpClient();
@@ -106,7 +106,7 @@ namespace DeveloperUniversity.Controllers
             }
             else
             {
-                return View();
+                return View("Index", viewModel);
             }
         }
     }
