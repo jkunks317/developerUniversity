@@ -43,7 +43,7 @@ namespace DeveloperUniversity.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(AbsenceViewModel viewModel)
+        public ActionResult Create(AbsenceIndexViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
@@ -104,7 +104,18 @@ namespace DeveloperUniversity.Controllers
             {
                 return HttpNotFound();
             }
-            return View(absence);
+
+            var viewModel = new AbsenceViewModel();
+
+            viewModel.AbsenceDate = absence.AbsenceDate.Date;
+            viewModel.CourseTitle = absence.CourseTitle;
+            viewModel.StudentFirstName = absence.StudentFirstName;
+            viewModel.StudentLastName = absence.StudentLastName;
+            viewModel.Id = absence.Id;
+            viewModel.CourseId = absence.CourseId;
+            viewModel.StudentId = absence.StudentId;
+           
+            return View(viewModel);
         }
 
         // POST: Absence/Edit/5
@@ -112,15 +123,24 @@ namespace DeveloperUniversity.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,AbsenceDate,StudentFirstName,StudentLastName,CourseTitle,CourseId,StudentId")] Absence absence)
+        public ActionResult Edit(AbsenceViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(absence).State = EntityState.Modified;
+                var absence = db.Absences.FirstOrDefault(a => a.Id == viewModel.Id);
+
+                absence.AbsenceDate = viewModel.AbsenceDate;
+                absence.CourseTitle = viewModel.CourseTitle;
+                absence.StudentFirstName = viewModel.StudentFirstName;
+                absence.StudentLastName = viewModel.StudentLastName;
+                absence.CourseId = viewModel.CourseId;
+                absence.StudentId = viewModel.StudentId;
+
                 db.SaveChanges();
+
                 return RedirectToAction("Index");
             }
-            return View(absence);
+            return View(viewModel);
         }
 
         // GET: Absence/Delete/5

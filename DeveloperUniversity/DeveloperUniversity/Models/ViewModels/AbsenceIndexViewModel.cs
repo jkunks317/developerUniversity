@@ -3,9 +3,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DeveloperUniversity.Models.ViewModels
 {
-    public class AbsenceViewModel
+    public class AbsenceIndexViewModel
     {
-        public int Id { get; set; }
         [Display(Name = "Absence Date")]
         public DateTime AbsenceDate { get; set; }
         [Display(Name = "Student First Name")]
@@ -14,9 +13,5 @@ namespace DeveloperUniversity.Models.ViewModels
         public string StudentLastName { get; set; }
         [Display(Name = "Course Title")]
         public string CourseTitle { get; set; }
-
-        public int StudentId { get; set; }
-        public int CourseId { get; set; }
-
     }
 }
