@@ -35,7 +35,18 @@ namespace DeveloperUniversity.Controllers
         // GET: Absence/Create
         public ActionResult Create()
         {
-            return View();
+            //Note: On 2nd pass I updated this view to have a dropdown for course title instead of textbox,
+            //      this helps remove the need for so much error checking/handling on course title textbox because now,
+            //      the title will match what is in the database when they select it from the dropdown list.
+
+            //      Old Code 
+            //      return View();
+
+            //      New Code
+            var viewModel = new AbsenceIndexViewModel();
+           // viewModel.CourseTitles = db.Courses.Select(c => c.Title).ToList();
+            viewModel.CourseTitles = db.Courses.Select(x => new SelectListItem { Text = x.Title, Value = x.Id.ToString() }).ToList();
+            return View(viewModel);
         }
 
         // POST: Absence/Create
@@ -53,13 +64,24 @@ namespace DeveloperUniversity.Controllers
                 absence.StudentFirstName = viewModel.StudentFirstName;
                 absence.AbsenceDate = viewModel.AbsenceDate;
 
+                var test = viewModel.CourseTitle;
+                //Old Code
+
                 //.Replace(" ", "")  and .ToLower() are used to try and get both strings to a similar format
                 //this helps when trying to compare 2 strings, and input/comparison variations are likely
-                var student = db.Students.Where(s => s.FirstName.Replace(" ", "").ToLower() == viewModel.StudentFirstName.Replace(" ", "").ToLower() && 
+
+                //var student = db.Students.Where(s => s.FirstName.Replace(" ", "").ToLower() == viewModel.StudentFirstName.Replace(" ", "").ToLower() && 
+                //                                     s.LastName.Replace(" ", "").ToLower() == viewModel.StudentLastName.Replace(" ", "").ToLower()).FirstOrDefault();
+
+                //var course = db.Courses.Where(c => c.Title.Replace(" ", "").ToLower() == viewModel.CourseTitle.Replace(" ", "").ToLower()).FirstOrDefault();
+
+                //New Code
+                var student = db.Students.Where(s => s.FirstName.Replace(" ", "").ToLower() == viewModel.StudentFirstName.Replace(" ", "").ToLower() &&
                                                      s.LastName.Replace(" ", "").ToLower() == viewModel.StudentLastName.Replace(" ", "").ToLower()).FirstOrDefault();
 
-                var course = db.Courses.Where(c => c.Title.Replace(" ", "").ToLower() == viewModel.CourseTitle.Replace(" ", "").ToLower()).FirstOrDefault();
-                
+                var course = db.Courses.Where(c => c.Id.ToString() == viewModel.CourseTitle).FirstOrDefault();
+
+
                 //Get the student and course record for entered data
                 //TODO: Update Later.
                 if (student == null)

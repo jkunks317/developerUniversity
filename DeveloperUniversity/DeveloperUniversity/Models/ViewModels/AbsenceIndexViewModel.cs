@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
+using System.Web.Mvc;
 
 namespace DeveloperUniversity.Models.ViewModels
 {
@@ -13,5 +16,6 @@ namespace DeveloperUniversity.Models.ViewModels
         public string StudentLastName { get; set; }
         [Display(Name = "Course Title")]
         public string CourseTitle { get; set; }
+        public List<SelectListItem> CourseTitles { get; set; } 
     }
 }
