@@ -9,7 +9,7 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-
+    @Html.HiddenFor(m => m.CourseTitles)
     <div class="form-horizontal">
         <h4>Absence</h4>
         <hr />
@@ -17,24 +17,24 @@
         <div class="form-group">
             @Html.LabelFor(model => model.AbsenceDate, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.AbsenceDate, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.AbsenceDate, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.AbsenceDate, new { htmlAttributes = new { @class = "form-control required" } })
+                @Html.ValidationMessageFor(model => model.AbsenceDate, null, new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.StudentFirstName, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.StudentFirstName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.StudentFirstName, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.StudentFirstName, new { htmlAttributes = new { @class = "form-control required" } })
+                @Html.ValidationMessageFor(model => model.StudentFirstName, null, new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.StudentLastName, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.StudentLastName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.StudentLastName, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.StudentLastName, new { htmlAttributes = new { @class = "form-control required" } })
+                @Html.ValidationMessageFor(model => model.StudentLastName, null, new { @class = "text-danger" })
             </div>
         </div>
 
@@ -49,14 +49,10 @@
 
         @* New Code *@
         <div class="form-group">
-            @Html.LabelFor(model => model.CourseTitles, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.CourseTitle, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownListFor(m => m.CourseTitle, Model.CourseTitles.Select(course => new SelectListItem()
-           {
-               Text = course.Text,
-               Value = course.Value
-           }), new { @class ="form-control"})
-                @Html.ValidationMessageFor(model => model.CourseTitle, "", new {@class = "text-danger"})
+                @Html.DropDownListFor(m => m.CourseTitle, new SelectList(Model.CourseTitles), new { @class ="form-control"})
+                @Html.ValidationMessageFor(model => model.CourseTitle, null, new {@class = "text-danger"})
             </div>
         </div>
 

@@ -44,8 +44,10 @@ namespace DeveloperUniversity.Controllers
 
             //      New Code
             var viewModel = new AbsenceIndexViewModel();
-           // viewModel.CourseTitles = db.Courses.Select(c => c.Title).ToList();
-            viewModel.CourseTitles = db.Courses.Select(x => new SelectListItem { Text = x.Title, Value = x.Id.ToString() }).ToList();
+            // viewModel.CourseTitles = db.Courses.Select(c => c.Title).ToList();
+            //viewModel.CourseTitles = db.Courses.Select(x => new SelectListItem { Text = x.Title, Value = x.Id.ToString() }).ToList();
+            viewModel.CourseTitles = db.Courses.Select(c => c.Title).ToList();
+
             return View(viewModel);
         }
 
@@ -56,6 +58,9 @@ namespace DeveloperUniversity.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(AbsenceIndexViewModel viewModel)
         {
+            //TODO: Refreshing the whole list of Courses, only the selected 1 is posting back, maybe refactor later?          
+            viewModel.CourseTitles = db.Courses.Select(c => c.Title).ToList();
+
             if (ModelState.IsValid)
             {
                 var absence = new Absence();
@@ -64,7 +69,6 @@ namespace DeveloperUniversity.Controllers
                 absence.StudentFirstName = viewModel.StudentFirstName;
                 absence.AbsenceDate = viewModel.AbsenceDate;
 
-                var test = viewModel.CourseTitle;
                 //Old Code
 
                 //.Replace(" ", "")  and .ToLower() are used to try and get both strings to a similar format
@@ -79,18 +83,24 @@ namespace DeveloperUniversity.Controllers
                 var student = db.Students.Where(s => s.FirstName.Replace(" ", "").ToLower() == viewModel.StudentFirstName.Replace(" ", "").ToLower() &&
                                                      s.LastName.Replace(" ", "").ToLower() == viewModel.StudentLastName.Replace(" ", "").ToLower()).FirstOrDefault();
 
-                var course = db.Courses.Where(c => c.Id.ToString() == viewModel.CourseTitle).FirstOrDefault();
+                var course = db.Courses.Where(c => c.Title == viewModel.CourseTitle).FirstOrDefault();
 
 
                 //Get the student and course record for entered data
                 //TODO: Update Later.
                 if (student == null)
                 {
-                    return new HttpStatusCodeResult(HttpStatusCode.InternalServerError, "Student not found.");
+                    return View("Create", viewModel);
+                    //Old Code
+                   // return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Student was not found.");
                 }
+
                 if (course == null)
                 {
-                    return new HttpStatusCodeResult(HttpStatusCode.InternalServerError, "Course not found.");
+                    return View("Create", viewModel);
+
+                    //Old Code
+                    //return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Course was not found.");
                 }
 
                 //Make sure that student is enrolled in that specific course
@@ -98,7 +108,10 @@ namespace DeveloperUniversity.Controllers
 
                 if (enrollment == null)
                 {
-                    return new HttpStatusCodeResult(HttpStatusCode.InternalServerError, "Student is not enrolled in that course.");
+                    return View("Create", viewModel);
+
+                    //Old Code
+                    //return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Student is not enrolled in that course.");
                 }
 
                 absence.CourseId = course.Id;
@@ -199,5 +212,15 @@ namespace DeveloperUniversity.Controllers
             }
             base.Dispose(disposing);
         }
+
+        //public static readonly string ResponseMessageKey = "ResponseMessage";
+        //public static readonly string ResponseMessageDebugKey = "ResponseMessageDebug";
+        //public static readonly string ResponseMessageTypeKey = "ResponseMessageType";
+        //public enum NotificationType { Alert, Success, Error }
+        //protected void ToastNotification(string message, NotificationType type = NotificationType.Success)
+        //{
+        //    TempData[ResponseMessageKey] = message;
+        //    TempData[ResponseMessageTypeKey] = type.ToString().ToLower();
+        //}
     }
 }
