@@ -36,7 +36,6 @@ namespace DeveloperUniversity.Controllers
             var Db = new ApplicationDbContext();
             var user = Db.Users.FirstOrDefault(u => u.Id == id);
             var model = new EditUserViewModel(user);
-            //ViewBag.MessageId = Message;
             return View(model);
         }
 
@@ -50,11 +49,16 @@ namespace DeveloperUniversity.Controllers
             {
                 var Db = new ApplicationDbContext();
                 var user = Db.Users.First(u => u.UserName == model.UserName);
+
+                //Didn't implement ability to modify FirstName or LastName, but this is how you would do it.
                 //user.FirstName = model.FirstName;
                 //user.LastName = model.LastName;
+
                 user.Email = model.Email;
+
                 Db.Entry(user).State = System.Data.Entity.EntityState.Modified;
                 await Db.SaveChangesAsync();
+
                 return RedirectToAction("Index");
             }
 

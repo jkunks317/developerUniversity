@@ -53,6 +53,7 @@ namespace DeveloperUniversity.Models
 
             base.OnModelCreating(modelBuilder);
         }
+
         //We must add DbSets here for each table we want Entity Framework to generate.
         //Then we must add a mapping file to tell Entity Framework HOW we want those tables generated.
         public DbSet<Student> Students { get; set; }

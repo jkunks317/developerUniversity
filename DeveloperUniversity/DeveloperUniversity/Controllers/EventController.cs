@@ -17,10 +17,22 @@ namespace DeveloperUniversity.Controllers
 
         public ActionResult Index()
         {
+            try { 
             var scheduler = new DHXScheduler(this); //initializes dhtmlxScheduler
             scheduler.LoadData = true;// allows loading data
             scheduler.EnableDataprocessor = true;// enables DataProcessor in order to enable implementation CRUD operations
-            return View(scheduler);
+
+                return View(scheduler);
+            }
+            catch (Exception ex)
+            {
+                if (ex != null)
+                {
+                    return RedirectToAction("Index", "Home");
+                }                
+            }
+
+            return RedirectToAction("Index", "Home");
         }
 
         public ActionResult Data()
