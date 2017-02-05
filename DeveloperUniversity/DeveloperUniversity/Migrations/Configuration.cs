@@ -15,6 +15,10 @@ namespace DeveloperUniversity.Migrations
 
         protected override void Seed(ApplicationDbContext context)
         {
+#if DEBUG
+
+
+
             var student1 = new Student
             {
                 FirstName = "Tyler",
@@ -87,27 +91,40 @@ namespace DeveloperUniversity.Migrations
                 Title = "CIS 450"
             };
 
-            context.Students.AddOrUpdate(student1);
-            context.Students.AddOrUpdate(student2);
-            context.Students.AddOrUpdate(student3);
+            if (context.Students == null)
+            {
+                context.Students.AddOrUpdate(student1);
+                context.Students.AddOrUpdate(student2);
+                context.Students.AddOrUpdate(student3);
+            }
 
-            context.Courses.AddOrUpdate(course1);
-            context.Courses.AddOrUpdate(course2);
-            context.Courses.AddOrUpdate(course3);
+            
 
-            context.Enrollments.AddOrUpdate(enrollment1);
-            context.Enrollments.AddOrUpdate(enrollment2);
-            context.Enrollments.AddOrUpdate(enrollment3);
 
-            student1.Enrollments.Add(enrollment1);
-            student2.Enrollments.Add(enrollment2);
-            student3.Enrollments.Add(enrollment3);
+            if (context.Enrollments == null)
+            {
+                context.Enrollments.AddOrUpdate(enrollment1);
+                context.Enrollments.AddOrUpdate(enrollment2);
+                context.Enrollments.AddOrUpdate(enrollment3);
 
-            course1.Enrollments.Add(enrollment1);
-            course2.Enrollments.Add(enrollment2);
-            course3.Enrollments.Add(enrollment3);
+                student1.Enrollments.Add(enrollment1);
+                student2.Enrollments.Add(enrollment2);
+                student3.Enrollments.Add(enrollment3);
+            }
+
+            if (context.Courses == null)
+            {
+                context.Courses.AddOrUpdate(course1);
+                context.Courses.AddOrUpdate(course2);
+                context.Courses.AddOrUpdate(course3);
+
+                course1.Enrollments.Add(enrollment1);
+                course2.Enrollments.Add(enrollment2);
+                course3.Enrollments.Add(enrollment3);
+            }
 
             context.SaveChanges();
+#endif
         }
     }
 }
