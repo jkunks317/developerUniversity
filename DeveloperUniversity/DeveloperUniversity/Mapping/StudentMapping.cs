@@ -12,6 +12,7 @@ namespace DeveloperUniversity.Mapping
             Property(p => p.FirstName).IsRequired();
             Property(p => p.LastName).IsRequired();
             Property(p => p.EnrollmentDate).IsRequired();
+            Property(p => p.Email).IsRequired();
 
             HasMany(p => p.Enrollments);
         }

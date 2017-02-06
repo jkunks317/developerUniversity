@@ -14,6 +14,7 @@ namespace DeveloperUniversity.Models.ViewModels
         public string City { get; set; }
         public string State { get; set; }
         public int ZipCode { get; set; }
+        public string Email { get; set; }
         [Display(Name = "Enrollment Date")]
         public DateTime EnrollmentDate { get; set; }
     }

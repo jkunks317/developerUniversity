@@ -1,7 +1,10 @@
-﻿using System.Data.Entity;
+﻿using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Net.Mail;
 using System.Web.Mvc;
+using DeveloperUniversity.Helpers;
 using DeveloperUniversity.Models;
 using DeveloperUniversity.Models.ViewModels;
 
@@ -21,7 +24,7 @@ namespace DeveloperUniversity.Controllers
                 LastName = s.LastName,
                 EnrollmentDate = s.EnrollmentDate
             });
-            
+
             return View(students);
         }
 
@@ -134,6 +137,64 @@ namespace DeveloperUniversity.Controllers
             db.Students.Remove(student);
             db.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+
+        public void EmailAllStudents(string subject, string message)
+        {
+            //Get all currently active students + any extra search criteria we might want.
+            var students = db.Students;
+
+            foreach (var student in students)
+            {
+                //Send Email..
+
+
+                var IsDebug = false;
+
+#if DEBUG
+                IsDebug = true;
+#endif
+
+                var toEmail = "tylersmtptest@gmail.com";
+                var toEmailPassword = "smtpwelcome1";
+
+                //Debug SMTP Settings
+                var debugSmtpClient = Constants.DebugSmtpClient;
+                //Setup credentials to login to our sender email address("UserName", "Password")
+                NetworkCredential credentials = new NetworkCredential(toEmail, toEmailPassword);
+                debugSmtpClient.Credentials = credentials;
+
+                //Release SMTP Settings
+                var releaseSmtpClient = Constants.ReleaseSmtpClient;
+
+
+                if (ModelState.IsValid || (ModelState.IsValid == false && IsDebug))
+                {
+                    string Body = message;
+
+                    MailMessage mail = new MailMessage();
+                    mail.To.Add(toEmail);
+                    mail.From = new MailAddress(student.Email);
+                    mail.Subject = subject;
+                    mail.Body = Body;
+                    mail.IsBodyHtml = true;
+                    SmtpClient smtp = new SmtpClient();
+#if DEBUG
+                    smtp = debugSmtpClient;
+#else
+                smtp = releaseSmtpClient;
+#endif
+                    try
+                    {
+                        smtp.Send(mail);
+                    }
+                    catch (SmtpException)
+                    {
+                        RedirectToAction("Index");
+                    }
+                }
+            }
         }
 
         protected override void Dispose(bool disposing)
