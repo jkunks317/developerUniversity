@@ -5,11 +5,9 @@
 }
 
 <h2>Index</h2>
+<button class="btn btn-primary col-md-2 pull-left" onclick="location.href='@Url.Action("Create", "Student")'">Create New</button>
+<button class="btn btn-primary col-md-2 pull-right" style="margin-bottom:10px;">Email Students</button>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-@*<button class="btn btn-primary">@Url.Action("Email All Students","EmailAllStudents", "Student")</button>*@
 <table class="table">
     <tr>
         <th>
@@ -17,6 +15,9 @@
         </th>
         <th>
             @Html.DisplayNameFor(model => model.FirstName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Email)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.EnrollmentDate)
@@ -31,6 +32,9 @@
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.FirstName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Email)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.EnrollmentDate)
